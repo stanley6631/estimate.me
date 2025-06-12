@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import NextImage from "next/image";
+import Image from "next/image";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -58,9 +58,15 @@ const HomePage = () => {
   };
 
   return (
-    <div className="space-y-4 p-4 max-w-md mx-auto">
+    <div className="space-y-4 p-4 max-w-md mx-auto flex flex-col items-center">
       {!selectedFile && (
         <>
+          <Image
+            src={"/robot/default.png"}
+            height={200}
+            width={200}
+            alt="You'r buddy estimator"
+          ></Image>
           <Button className="w-full relative" variant={"default"}>
             <CameraIcon className="mr-2" />
             Take or upload a photo
@@ -71,7 +77,7 @@ const HomePage = () => {
               className="absolute opacity-0 top-0 left-0 w-full h-full cursor-pointer"
             />
           </Button>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-center text-gray-500">
             For better results, try to take a picture of your product with as
             much detail as posiible.
           </p>
@@ -79,7 +85,7 @@ const HomePage = () => {
       )}
 
       {previewUrl && (
-        <NextImage
+        <Image
           src={previewUrl}
           alt="Preview"
           width={300}
