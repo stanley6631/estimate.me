@@ -66,7 +66,7 @@ const HomePage = () => {
             src={"/robot/default.png"}
             height={200}
             width={200}
-            alt="You'r buddy estimator"
+            alt="Your buddy estimator"
           ></Image>
           <Button className="w-full relative" variant={"default"}>
             <CameraIcon className="mr-2" />
@@ -97,7 +97,7 @@ const HomePage = () => {
 
       {loading && (
         <>
-          <div className="w-full p-4 bg-gray-100 rounded mt-4 whitespace-pre-wrap">
+          <div className="w-full p-4 bg-gray-100 rounded whitespace-pre-wrap">
             <Skeleton className="w-1/3 h-4 mb-4 bg-gray-300 animate-pulse" />
             <Skeleton className="w-1/2 h-4 bg-gray-300 animate-pulse" />
           </div>
@@ -106,7 +106,7 @@ const HomePage = () => {
 
       {description && (
         <>
-          <div className="w-full bg-gray-100 p-4 rounded mt-4 whitespace-pre-wrap">
+          <div className="w-full bg-gray-100 p-4 rounded whitespace-pre-wrap">
             <strong>Product:</strong>
             <p>{description}</p>
           </div>
