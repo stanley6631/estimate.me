@@ -9,12 +9,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2Icon, CameraIcon } from "lucide-react";
 import { convertToBase64 } from "@/utils/convertToBase64";
 import { resizeImage } from "@/utils/resizeImage";
+import { useProducts } from "@/hooks/useProducts";
 
 const HomePage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [description, setDescription] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { data: products, isLoading: productsLoading } = useProducts(
+    description as string
+  );
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -106,10 +110,37 @@ const HomePage = () => {
 
       {description && (
         <>
-          <div className="w-full bg-gray-100 p-4 rounded whitespace-pre-wrap">
+          <div className="w-full bg-gray-100 p-4 rounded whitespace-pre-wrap mb-4">
             <strong>Product:</strong>
             <p>{description}</p>
           </div>
+
+          {productsLoading ? (
+            <Skeleton className="w-full h-4 bg-gray-300 animate-pulse" />
+          ) : (
+            products &&
+            products.length > 0 && (
+              <div className="w-full bg-white p-4 rounded shadow">
+                <h3 className="text-lg font-semibold mb-2">
+                  Matching Products:
+                </h3>
+                <ul className="space-y-2">
+                  {products.map((product: any) => (
+                    <li key={product.id} className="border-b pb-2">
+                      <a
+                        href={product.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {product.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          )}
         </>
       )}
 

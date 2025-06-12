@@ -1,6 +1,8 @@
 import React, { ReactNode } from "react";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
+import ClientProvider from "@/app/layout-client";
+
 import "@/app/globals.css";
 
 export const metadata = {
@@ -14,7 +16,9 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
       <body>
         <Header />
         <main className="h-[calc(100vh-134px)] flex items-center justify-center">
-          <div className="container mx-auto">{children}</div>
+          <div className="container mx-auto">
+            <ClientProvider>{children}</ClientProvider>
+          </div>
         </main>
         <Footer />
       </body>
