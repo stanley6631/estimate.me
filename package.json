@@ -1,0 +1,38 @@
+{
+  "name": "price-estimator",
+  "description": "A Next.js application for estimating prices based on user input.",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.3",
+    "@tailwindcss/postcss": "^4.1.9",
+    "@tanstack/react-query": "^5.80.6",
+    "axios": "^1.9.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.514.0",
+    "next": "13.5.4",
+    "openai": "^5.3.0",
+    "openapi": "^1.0.1",
+    "pica": "^9.0.1",
+    "postcss": "^8.5.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "shadcn": "^2.6.3",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss": "^4.1.9",
+    "tw-animate-css": "^1.3.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.0.0",
+    "@types/pica": "^9.0.5",
+    "@types/react": "18.2.14",
+    "@types/react-dom": "18.2.7",
+    "typescript": "5.2.2"
+  }
+}
