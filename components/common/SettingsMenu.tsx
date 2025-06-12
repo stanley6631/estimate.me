@@ -6,8 +6,10 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetFooter,
 } from "@/components/ui/sheet";
-import { UserIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { UserIcon, LogOutIcon } from "lucide-react";
 
 const SettingsMenu: React.FC = () => {
   return (
@@ -25,6 +27,12 @@ const SettingsMenu: React.FC = () => {
             </SheetTitle>
             <SheetDescription>You have 14 remaining requests.</SheetDescription>
           </SheetHeader>
+          <SheetFooter>
+            <Button variant={"default"}>
+              <LogOutIcon />
+              Log out
+            </Button>
+          </SheetFooter>
         </SheetContent>
       </Sheet>
     </>
