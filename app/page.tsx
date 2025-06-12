@@ -5,6 +5,7 @@ import Image from "next/image";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2Icon, CameraIcon } from "lucide-react";
 import { convertToBase64 } from "@/utils/convertToBase64";
 import { resizeImage } from "@/utils/resizeImage";
@@ -69,17 +70,17 @@ const HomePage = () => {
           ></Image>
           <Button className="w-full relative" variant={"default"}>
             <CameraIcon className="mr-2" />
-            Take or upload a photo
+            Take or upload a photo of your product
             <Input
               type="file"
               onChange={handleFileChange}
               accept="image/*"
-              className="absolute opacity-0 top-0 left-0 w-full h-full cursor-pointer"
+              className="fixed opacity-0 top-[72px] left-0 w-full h-[calc(100vh-134px)] cursor-pointer"
             />
           </Button>
           <p className="text-sm text-center text-gray-500">
-            For better results, try to take a picture of your product with as
-            much detail as posiible.
+            For better results, try to take a picture with as much detail as
+            posiible.
           </p>
         </>
       )}
@@ -92,6 +93,24 @@ const HomePage = () => {
           height={300}
           className="rounded w-full h-auto mb-4"
         />
+      )}
+
+      {loading && (
+        <>
+          <div className="w-full p-4 bg-gray-100 rounded mt-4 whitespace-pre-wrap">
+            <Skeleton className="w-1/3 h-4 mb-4 bg-gray-300 animate-pulse" />
+            <Skeleton className="w-1/2 h-4 bg-gray-300 animate-pulse" />
+          </div>
+        </>
+      )}
+
+      {description && (
+        <>
+          <div className="w-full bg-gray-100 p-4 rounded mt-4 whitespace-pre-wrap">
+            <strong>Product:</strong>
+            <p>{description}</p>
+          </div>
+        </>
       )}
 
       {selectedFile && !description && (
@@ -109,24 +128,18 @@ const HomePage = () => {
       )}
 
       {description && (
-        <>
-          <div className="bg-gray-100 p-4 rounded mt-4 whitespace-pre-wrap">
-            <strong>Product:</strong>
-            <p>{description}</p>
-          </div>
-          <Button
-            className="w-full"
-            variant={"default"}
-            onClick={() => {
-              setSelectedFile(null);
-              setPreviewUrl(null);
-              setDescription(null);
-              setLoading(false);
-            }}
-          >
-            Choose another product
-          </Button>
-        </>
+        <Button
+          className="w-full"
+          variant={"default"}
+          onClick={() => {
+            setSelectedFile(null);
+            setPreviewUrl(null);
+            setDescription(null);
+            setLoading(false);
+          }}
+        >
+          Choose another product
+        </Button>
       )}
     </div>
   );
