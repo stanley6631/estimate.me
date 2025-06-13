@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { EbaySearchResponse } from "@/types/ebayResponse";
 
 export const useProducts = (query: string) => {
   return useQuery({
@@ -12,7 +13,7 @@ export const useProducts = (query: string) => {
           "There was an error fetching matching the products from the API"
         );
       }
-      return response.json();
+      return response.json() as Promise<EbaySearchResponse>;
     },
     enabled: !!query,
     refetchOnWindowFocus: false,

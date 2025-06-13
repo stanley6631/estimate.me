@@ -15,7 +15,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
     <html lang="en">
       <body>
         <Header />
-        <main className="h-[calc(100vh-134px)] flex items-center justify-center">
+        <main className="min-h-[calc(100vh-134px)] flex items-center justify-center">
           <div className="container mx-auto">
             <ClientProvider>{children}</ClientProvider>
           </div>

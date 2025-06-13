@@ -10,6 +10,7 @@ import { Loader2Icon, CameraIcon } from "lucide-react";
 import { convertToBase64 } from "@/utils/convertToBase64";
 import { resizeImage } from "@/utils/resizeImage";
 import { useProducts } from "@/hooks/useProducts";
+import EbayProductsList from "@/components/products/EbayProductsList";
 
 const HomePage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -119,25 +120,14 @@ const HomePage = () => {
             <Skeleton className="w-full h-4 bg-gray-300 animate-pulse" />
           ) : (
             products &&
-            products.length > 0 && (
+            products.itemSummaries.length > 0 && (
               <div className="w-full bg-white p-4 rounded shadow">
                 <h3 className="text-lg font-semibold mb-2">
-                  Matching Products:
+                  Best matching products:
                 </h3>
-                <ul className="space-y-2">
-                  {products.map((product: any) => (
-                    <li key={product.id} className="border-b pb-2">
-                      <a
-                        href={product.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        {product.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <EbayProductsList
+                  products={products.itemSummaries.slice(0, 5)}
+                />
               </div>
             )
           )}
