@@ -7,6 +7,7 @@ let cachedToken: { token: string; expiresAt: number } | null = null;
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q");
+  const limit = searchParams.get("limit") || "100";
 
   const ebayApiUrl = `${process.env.EBAY_API_URL}buy/browse/v1/item_summary/search`;
   const clientId = process.env.EBAY_CLIENT_ID;
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
     // Check if token is cached and still valid
     if (cachedToken && cachedToken.expiresAt > Date.now()) {
       const ebayResponse = await axios.get(
-        `${ebayApiUrl}?q=${encodeURIComponent(query)}`,
+        `${ebayApiUrl}?q=${encodeURIComponent(query)}&limit=${limit}`,
         {
           headers: {
             Authorization: `Bearer ${cachedToken.token}`,
@@ -67,7 +68,7 @@ export async function GET(request: Request) {
     };
 
     const ebayResponse = await axios.get(
-      `${ebayApiUrl}?q=${encodeURIComponent(query)}`,
+      `${ebayApiUrl}?q=${encodeURIComponent(query)}&limit=${limit}`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
