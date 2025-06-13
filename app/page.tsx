@@ -12,13 +12,20 @@ import { resizeImage } from "@/utils/resizeImage";
 import { useProducts } from "@/hooks/useProducts";
 import EbayProductsList from "@/components/products/EbayProductsList";
 
+type ProductInfo = {
+  product_name: string;
+  condition: "new" | "like new" | "good" | "fair" | "poor";
+};
+
 const HomePage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
+  const [description, setDescription] = useState<ProductInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { data: products, isLoading: productsLoading } = useProducts(
-    description as string
+    ((description?.product_name as string) +
+      " " +
+      description?.condition) as string
   );
 
   const handleFileChange = async (
@@ -53,11 +60,12 @@ const HomePage = () => {
         imageBase64: base64,
       });
 
-      const content = res.data || "No description returned.";
-      setDescription(content);
+      const content = res.data || null;
+      const cleaned = content.replace(/```json|```/g, "").trim();
+      setDescription(JSON.parse(cleaned));
     } catch (err) {
       console.error("Error describing image:", err);
-      setDescription("Error: Failed to describe the image.");
+      setDescription(null);
     } finally {
       setLoading(false);
     }
@@ -104,6 +112,8 @@ const HomePage = () => {
         <>
           <div className="w-full p-4 bg-gray-100 rounded whitespace-pre-wrap">
             <Skeleton className="w-1/3 h-4 mb-4 bg-gray-300 animate-pulse" />
+            <Skeleton className="w-1/2 h-4 bg-gray-300 animate-pulse mb-3" />
+            <Skeleton className="w-1/3 h-4 mb-4 bg-gray-300 animate-pulse" />
             <Skeleton className="w-1/2 h-4 bg-gray-300 animate-pulse" />
           </div>
         </>
@@ -113,7 +123,9 @@ const HomePage = () => {
         <>
           <div className="w-full bg-gray-100 p-4 rounded whitespace-pre-wrap mb-4">
             <strong>Product:</strong>
-            <p>{description}</p>
+            <p className="mb-3">{description.product_name}</p>
+            <strong>Condition:</strong>
+            <p>{description.condition}</p>
           </div>
 
           {productsLoading ? (
