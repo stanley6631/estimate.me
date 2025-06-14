@@ -117,12 +117,6 @@ const HomePage = () => {
     <div className="space-y-4 p-4 max-w-md mx-auto flex flex-col items-center">
       {!selectedFile && !cameraActive && (
         <>
-          <Image
-            src={"/robot/default.png"}
-            height={200}
-            width={200}
-            alt="Your buddy estimator"
-          ></Image>
           {/* <Button
             className="w-full relative"
             variant={"default"}
