@@ -146,7 +146,7 @@ const HomePage = () => {
           </Button>
           <p className="text-sm text-center text-gray-500">
             For better results, try to take a picture with as much detail as
-            possible.
+            posible.
           </p>
         </>
       )}
