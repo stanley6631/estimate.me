@@ -21,25 +21,14 @@ export async function POST(req: NextRequest) {
   try {
     const contentType = req.headers.get("content-type") || "";
 
-    if (!contentType.includes("multipart/form-data")) {
+    if (!contentType.includes("application/json")) {
       return NextResponse.json(
-        { error: "Expected multipart/form-data" },
+        { error: "Expected application/json" },
         { status: 400 }
       );
     }
 
-    const formData = await req.formData();
-    const file = formData.get("file") as File;
-
-    if (!file || file.type !== "application/json") {
-      return NextResponse.json(
-        { error: "Invalid or missing JSON file" },
-        { status: 400 }
-      );
-    }
-
-    const fileContent = await file.text();
-    const jsonData: ProductAnalysisDataObject[] = JSON.parse(fileContent);
+    const jsonData: ProductAnalysisDataObject[] = await req.json();
 
     const priceAnalysis = analyzePriceData(jsonData);
 
