@@ -19,8 +19,9 @@ const HomePage = () => {
   const [description, setDescription] =
     useState<GptProductObjectResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { data: products, isLoading: productsLoading } =
-    useProducts(description);
+  const { data: products, isLoading: productsLoading } = useProducts(
+    description as GptProductObjectResponse
+  );
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
