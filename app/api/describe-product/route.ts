@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
           content: [
             {
               type: "input_text",
-              text: "From this image, tell me:\n1. The exact product name and model/type (e.g., 'Apple iPhone 12 Pro Max').\n2. Your best guess of the item's condition (please pick from one of these: new, like new, good, fair, poor).Return the answer as parsable JSON with two keys: 'product_name' and 'condition'.",
+              text: "From this image, tell me:\n1. The exact product name and model/type (e.g., 'Apple iPhone 12 Pro Max').\n2. Your best guess of the item's condition (please pick from one of these options: new, like new, used, damaged).Return the answer as parsable JSON with two keys: 'product_name' and 'condition'.",
             },
             {
               type: "input_image",

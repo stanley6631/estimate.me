@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import Image from "next/image";
+import EbayProductsList from "@/components/products/EbayProductsList";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,23 +11,16 @@ import { Loader2Icon, CameraIcon } from "lucide-react";
 import { convertToBase64 } from "@/utils/convertToBase64";
 import { resizeImage } from "@/utils/resizeImage";
 import { useProducts } from "@/hooks/useProducts";
-import EbayProductsList from "@/components/products/EbayProductsList";
-
-type ProductInfo = {
-  product_name: string;
-  condition: "new" | "like new" | "good" | "fair" | "poor";
-};
+import type { GptProductObjectResponse } from "@/types/gptProductObjectResponse";
 
 const HomePage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [description, setDescription] = useState<ProductInfo | null>(null);
+  const [description, setDescription] =
+    useState<GptProductObjectResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const { data: products, isLoading: productsLoading } = useProducts(
-    ((description?.product_name as string) +
-      " " +
-      description?.condition) as string
-  );
+  const { data: products, isLoading: productsLoading } =
+    useProducts(description);
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -133,13 +127,11 @@ const HomePage = () => {
           ) : (
             products &&
             products.itemSummaries.length > 0 && (
-              <div className="w-full bg-white p-4 rounded shadow">
+              <div className="w-full">
                 <h3 className="text-lg font-semibold mb-2">
                   Best matching products:
                 </h3>
-                <EbayProductsList
-                  products={products.itemSummaries.slice(0, 5)}
-                />
+                <EbayProductsList products={products.itemSummaries} />
               </div>
             )
           )}

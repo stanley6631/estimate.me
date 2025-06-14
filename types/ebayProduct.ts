@@ -1,3 +1,9 @@
+export interface ProductAnalysisDataObject {
+  title: string;
+  price: Price;
+  condition: string;
+}
+
 export interface EbayProduct {
   itemId: string;
   title: string;
