@@ -52,7 +52,7 @@ const EbayProductsList: React.FC<EbayProductsListProps> = ({ products }) => {
         <Button
           onClick={handleLoadMore}
           variant={"link"}
-          className="w-full mt-4"
+          className="w-full mb-2"
         >
           Load More
         </Button>
