@@ -4,7 +4,7 @@ export interface ProductAnalysisDataObject {
   condition: string;
 }
 
-export interface EbayProduct {
+export interface EbayProductType {
   itemId: string;
   title: string;
   itemGroupHref?: string;
