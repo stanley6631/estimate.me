@@ -64,7 +64,7 @@ const EbayProductsList: React.FC<EbayProductsListProps> = ({
                 ))}
               </ul>
 
-              {visibleCount < 100 && (
+              {(visibleCount < 100 || visibleCount > products.length) && (
                 <Button
                   onClick={handleLoadMore}
                   variant={"link"}
