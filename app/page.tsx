@@ -7,7 +7,7 @@ import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2Icon, CameraIcon } from "lucide-react";
+import { CheckIcon, CameraIcon, X } from "lucide-react";
 import { convertToBase64 } from "@/utils/convertToBase64";
 import { resizeImage } from "@/utils/resizeImage";
 import { useProducts } from "@/hooks/useProducts";
@@ -187,7 +187,9 @@ const HomePage = () => {
             <strong>Product:</strong>
             <p className="mb-3">{description.product_name}</p>
             <strong>Condition:</strong>
-            <p>{description.condition}</p>
+            <p>
+              {description.condition} - {description.note}
+            </p>
           </div>
 
           {productsLoading ? (
@@ -204,17 +206,35 @@ const HomePage = () => {
       )}
 
       {selectedFile && !description && (
-        <Button
-          onClick={handleSendRequest}
-          disabled={loading}
-          className="w-full"
-        >
-          {loading ? (
-            <Loader2Icon className="animate-spin" />
-          ) : (
-            "Estimate Product"
-          )}
-        </Button>
+        <>
+          <div className="grid grid-cols-12 w-full gap-4">
+            <div className="col-span-6">
+              <Button
+                onClick={handleSendRequest}
+                disabled={loading}
+                className="w-full"
+              >
+                <CheckIcon />
+                Analyze product
+              </Button>
+            </div>
+            <div className="col-span-6">
+              <Button
+                onClick={() => {
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
+                  setDescription(null);
+                }}
+                disabled={loading}
+                className="w-full"
+                variant={"outline"}
+              >
+                <X />
+                Retake picture
+              </Button>
+            </div>
+          </div>
+        </>
       )}
 
       {description && (
