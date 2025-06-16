@@ -1,71 +1,101 @@
 import React, { useState } from "react";
+import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 import { EbayProduct } from "@/types/ebayProduct";
 import { useProductAnalysis } from "@/hooks/useProductAnalysis";
 import { convertToAnalysisData } from "@/utils/convertToAnalysisData";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { CameraIcon } from "lucide-react";
 interface EbayProductsListProps {
-  products: EbayProduct[];
+  products: EbayProduct[] | undefined;
+  productsLoading: boolean;
 }
 
-const EbayProductsList: React.FC<EbayProductsListProps> = ({ products }) => {
+const EbayProductsList: React.FC<EbayProductsListProps> = ({
+  products,
+  productsLoading,
+}) => {
   const [visibleCount, setVisibleCount] = useState(5);
   const { data: productAnalysis, isLoading: productAnalysisLoading } =
-    useProductAnalysis(convertToAnalysisData(products));
+    useProductAnalysis(convertToAnalysisData(products ? products : []));
 
   const handleLoadMore = () => {
     setVisibleCount((prevCount) => Math.min(prevCount + 5, 100));
   };
 
   return (
-    <div>
+    <div className="w-full">
       <span className="font-medium text-md flex items-center mb-2">
         <span className="me-1">Best matching products on</span>
         <Image src={"/ebay.svg"} width={60} height={20} alt=""></Image>
       </span>
-      <ul className="mb-2">
-        {products.slice(0, visibleCount).map((product, index) => (
-          <li
-            className={`flex items-center mb-4 p-2 ${
-              index === products.slice(0, visibleCount).length - 1
-                ? ""
-                : "border-b"
-            }`}
-            key={product.itemId}
-          >
-            {product.image ? (
-              <div className="w-16 h-16 min-w-16 min-h-16 border rounded-md overflow-hidden mr-4">
-                <img
-                  src={product?.image?.imageUrl}
-                  alt={product.title}
-                  className="w-full h-full object-cover"
-                />
+      {productsLoading ? (
+        <ul className="mb-2 w-full">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <li
+              className="flex items-center mb-4 p-2 border-b w-full"
+              key={`skeleton-${index}`}
+            >
+              <Skeleton className="w-16 h-16 min-w-16 min-h-16 rounded-md mr-4 bg-gray-300 animate-pulse" />
+              <div className="w-full flex flex-col">
+                <Skeleton className="h-4 w-full mb-1 bg-gray-300 animate-pulse" />
+                <Skeleton className="h-4 w-20 bg-gray-300 animate-pulse" />
               </div>
-            ) : (
-              <div className="w-16 h-16 min-w-16 min-h-16 border rounded-md flex items-center justify-center mr-4">
-                <CameraIcon />
-              </div>
-            )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <>
+          {products && (
+            <>
+              <ul className="mb-2 w-full">
+                {products.slice(0, visibleCount).map((product, index) => (
+                  <li
+                    className={`flex items-center mb-4 p-2 ${
+                      index === products.slice(0, visibleCount).length - 1
+                        ? ""
+                        : "border-b"
+                    }`}
+                    key={product.itemId}
+                  >
+                    {product.image ? (
+                      <div className="w-16 h-16 min-w-16 min-h-16 rounded-md overflow-hidden mr-4">
+                        <img
+                          src={product?.image?.imageUrl}
+                          alt={product.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-16 h-16 min-w-16 min-h-16 border rounded-md flex items-center justify-center mr-4">
+                        <CameraIcon />
+                      </div>
+                    )}
 
-            <div className="flex flex-col">
-              <h3 className="text-sm font-normal font mb-1">{product.title}</h3>
-              <strong className="text-md">
-                {product.price.value} {product.price.currency}
-              </strong>
-            </div>
-          </li>
-        ))}
-      </ul>
+                    <div className="flex flex-col">
+                      <h3 className="text-sm font-normal font mb-1">
+                        {product.title}
+                      </h3>
+                      <strong className="text-md">
+                        {product.price.value} {product.price.currency}
+                      </strong>
+                    </div>
+                  </li>
+                ))}
+              </ul>
 
-      {visibleCount < 100 && (
-        <Button
-          onClick={handleLoadMore}
-          variant={"link"}
-          className="w-full mb-2"
-        >
-          Load More
-        </Button>
+              {visibleCount < 100 && (
+                <Button
+                  onClick={handleLoadMore}
+                  variant={"link"}
+                  className="w-full mb-2"
+                >
+                  Load More
+                </Button>
+              )}
+            </>
+          )}
+        </>
       )}
 
       {productAnalysis &&

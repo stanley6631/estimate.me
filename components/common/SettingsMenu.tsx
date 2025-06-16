@@ -25,7 +25,7 @@ const SettingsMenu: React.FC = () => {
               <UserIcon className="w-5 h-5" />
               Stanislav Pika
             </SheetTitle>
-            <SheetDescription>You have 14 remaining requests.</SheetDescription>
+            <SheetDescription>Your account</SheetDescription>
           </SheetHeader>
           <SheetFooter>
             <Button variant={"default"}>

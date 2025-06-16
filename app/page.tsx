@@ -192,16 +192,10 @@ const HomePage = () => {
             </p>
           </div>
 
-          {productsLoading ? (
-            <Skeleton className="w-full h-4 bg-gray-300 animate-pulse" />
-          ) : (
-            products &&
-            products.itemSummaries.length > 0 && (
-              <div className="w-full">
-                <EbayProductsList products={products.itemSummaries} />
-              </div>
-            )
-          )}
+          <EbayProductsList
+            products={products?.itemSummaries}
+            productsLoading={productsLoading}
+          />
         </>
       )}
 
