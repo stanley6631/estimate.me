@@ -1,4 +1,4 @@
-import type { EbayProduct } from "./ebayProduct";
+import type { EbayProductType } from "./ebayProduct";
 
 export interface EbaySearchResponse {
   href: string;
@@ -6,5 +6,5 @@ export interface EbaySearchResponse {
   next?: string;
   limit: number;
   offset: number;
-  itemSummaries: EbayProduct[];
+  itemSummaries: EbayProductType[];
 }
