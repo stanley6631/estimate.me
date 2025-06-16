@@ -196,9 +196,6 @@ const HomePage = () => {
             products &&
             products.itemSummaries.length > 0 && (
               <div className="w-full">
-                <h3 className="text-lg font-semibold mb-2">
-                  Best matching products:
-                </h3>
                 <EbayProductsList products={products.itemSummaries} />
               </div>
             )
