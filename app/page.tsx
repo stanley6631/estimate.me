@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import EbayProductsList from "@/components/products/EbayProductsList";
 import axios from "axios";
@@ -11,20 +11,18 @@ import { CheckIcon, CameraIcon, X } from "lucide-react";
 import { convertToBase64 } from "@/utils/convertToBase64";
 import { resizeImage } from "@/utils/resizeImage";
 import { useProducts } from "@/hooks/useProducts";
-import type { GptProductObjectResponse } from "@/types/gptProductObjectResponse";
 
 const HomePage = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [description, setDescription] =
-    useState<GptProductObjectResponse | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [cameraActive, setCameraActive] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { data: products, isLoading: productsLoading } = useProducts(
-    description as GptProductObjectResponse
-  );
+  const { data: products, isLoading: productsLoading } =
+    useProducts(searchQuery);
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -54,13 +52,18 @@ const HomePage = () => {
       setLoading(true);
       const base64 = await convertToBase64(selectedFile);
 
-      const res = await axios.post("/api/describe-product", {
+      const desc = await axios.post("/api/describe-product", {
         imageBase64: base64,
       });
 
-      const content = res.data || null;
-      const cleaned = content.replace(/```json|```/g, "").trim();
-      setDescription(JSON.parse(cleaned));
+      const content = desc.data || null;
+      setDescription(content);
+
+      const query = await axios.post("/api/get-search-query", {
+        descriptionText: content,
+      });
+      const searchQuery = query.data || null;
+      setSearchQuery(searchQuery.searchQuery);
     } catch (err) {
       console.error("Error describing image:", err);
       setDescription(null);
@@ -185,11 +188,7 @@ const HomePage = () => {
         <>
           <div className="w-full bg-gray-100 p-4 rounded whitespace-pre-wrap mb-4">
             <strong>Product:</strong>
-            <p className="mb-3">{description.product_name}</p>
-            <strong>Condition:</strong>
-            <p>
-              {description.condition} - {description.note}
-            </p>
+            <p className="mb-3">{description}</p>
           </div>
 
           <EbayProductsList
@@ -242,7 +241,7 @@ const HomePage = () => {
             setLoading(false);
           }}
         >
-          Choose another product
+          Analyze another product
         </Button>
       )}
     </div>

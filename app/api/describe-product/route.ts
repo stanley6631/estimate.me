@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
           content: [
             {
               type: "input_text",
-              text: "From this image, tell me:\n1. The exact product name and model/type (e.g., 'Apple iPhone 12 Pro Max').\n2. Your best guess of the item's condition (please pick from one of these options: new, like new, used, damaged). \n1 Based on what do you judge the condition ? Return the answer as parsable JSON with two keys: 'product_name', 'condition', 'note'. Don't return any other text, just the JSON.",
+              text: "From this image, describe the product in detail, I want to know the model/type, color, condition, and any other relevant information. Limit the response to 75 words.",
             },
             {
               type: "input_image",

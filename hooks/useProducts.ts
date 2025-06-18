@@ -1,13 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import { EbaySearchResponse } from "@/types/ebayResponse";
-import { GptProductObjectResponse } from "@/types/gptProductObjectResponse";
 
-export const useProducts = (query: GptProductObjectResponse) => {
+export const useProducts = (searchQuery: string | null) => {
   return useQuery({
-    queryKey: ["ebayProducts", query],
+    queryKey: ["ebayProducts", searchQuery],
     queryFn: async () => {
+      if (!searchQuery) {
+        throw new Error("Search query is required to fetch products");
+      }
+
+      console.log("Fetching products for query:", searchQuery);
+
       const response = await fetch(
-        `/api/get-matching-products?q=${encodeURIComponent(query.product_name)}`
+        `/api/get-matching-products?q=${encodeURIComponent(searchQuery)}`
       );
       if (!response.ok) {
         throw new Error(
@@ -16,7 +21,7 @@ export const useProducts = (query: GptProductObjectResponse) => {
       }
       return response.json() as Promise<EbaySearchResponse>;
     },
-    enabled: !!query,
+    enabled: !!searchQuery,
     refetchOnWindowFocus: false,
     retry: false,
   });
