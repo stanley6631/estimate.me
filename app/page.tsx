@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React from "react";
 import Image from "next/image";
 import EbayProductsList from "@/components/products/EbayProductsList";
 import axios from "axios";
@@ -11,16 +11,23 @@ import { CheckIcon, CameraIcon, X } from "lucide-react";
 import { convertToBase64 } from "@/utils/convertToBase64";
 import { resizeImage } from "@/utils/resizeImage";
 import { useProducts } from "@/hooks/useProducts";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import {
+  setSelectedFile,
+  setPreviewUrl,
+  setDescription,
+  setSearchQuery,
+  setLoading,
+  resetProductState,
+} from "@/store/productSlice";
+import CameraController from "@/components/common/CameraController";
 
 const HomePage = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [cameraActive, setCameraActive] = useState<boolean>(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dispatch = useAppDispatch();
+  const { selectedFile, previewUrl, description, searchQuery, loading } =
+    useAppSelector((s) => s.product);
+  const cameraActive = useAppSelector((s) => s.ui.cameraActive);
+
   const { data: products, isLoading: productsLoading } =
     useProducts(searchQuery);
 
@@ -28,112 +35,53 @@ const HomePage = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
-
     if (file) {
       const optimizedFile = await resizeImage(file);
-
       if (optimizedFile) {
-        setSelectedFile(optimizedFile);
-        setPreviewUrl(URL.createObjectURL(optimizedFile));
-        setDescription(null); // Reset previous result
+        dispatch(setSelectedFile(optimizedFile));
+        dispatch(setPreviewUrl(URL.createObjectURL(optimizedFile)));
+        dispatch(setDescription(null));
       }
     } else {
-      setSelectedFile(null);
-      setPreviewUrl(null);
+      dispatch(resetProductState());
     }
   };
 
   const handleSendRequest = async () => {
-    if (!selectedFile) {
-      throw new Error("No file selected");
-    }
-
+    if (!selectedFile) throw new Error("No file selected");
     try {
-      setLoading(true);
+      dispatch(setLoading(true));
       const base64 = await convertToBase64(selectedFile);
-
       const desc = await axios.post("/api/describe-product", {
         imageBase64: base64,
       });
-
       const content = desc.data || null;
-      setDescription(content);
-
+      dispatch(setDescription(content));
       const query = await axios.post("/api/get-search-query", {
         descriptionText: content,
       });
-      const searchQuery = query.data || null;
-      setSearchQuery(searchQuery.searchQuery);
+      const sq = query.data || null;
+      dispatch(setSearchQuery(sq.searchQuery));
     } catch (err) {
       console.error("Error describing image:", err);
-      setDescription(null);
+      dispatch(setDescription(null));
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const startCamera = async () => {
-    setCameraActive(true);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
-    } catch (err) {
-      console.error("Error accessing camera:", err);
-      setCameraActive(false);
-    }
-  };
-
-  const captureImage = () => {
-    if (videoRef.current && canvasRef.current) {
-      const context = canvasRef.current.getContext("2d");
-
-      if (context) {
-        context.drawImage(
-          videoRef.current,
-          0,
-          0,
-          canvasRef.current.width,
-          canvasRef.current.height
-        );
-        canvasRef.current.toBlob(async (blob) => {
-          if (blob) {
-            const file = new File([blob], "captured-image.jpg", {
-              type: "image/jpeg",
-            });
-            const optimizedFile = await resizeImage(file);
-            if (optimizedFile) {
-              setSelectedFile(optimizedFile);
-              setPreviewUrl(URL.createObjectURL(optimizedFile));
-              setDescription(null);
-              setCameraActive(false);
-            }
-          }
-        }, "image/jpeg");
-      }
+      dispatch(setLoading(false));
     }
   };
 
   return (
     <div className="space-y-4 p-4 max-w-md mx-auto flex flex-col items-center">
-      {!selectedFile && !cameraActive && (
+      <CameraController />
+      {/* TODO: make this work with the camera simultaneouslly */}
+      {/* {!selectedFile && !cameraActive && (
         <>
-          {/* <Button
-            className="w-full relative"
-            variant={"default"}
-            onClick={startCamera}
-          >
-            <CameraIcon className="mr-2" />
-            Open Camera
-          </Button> */}
           <Button
             className="w-full relative relative z-100"
             variant={"default"}
           >
             <CameraIcon className="mr-2" />
-            Take or upload a photo of your product
+            Upload a photo of your product
             <Input
               type="file"
               onChange={handleFileChange}
@@ -146,22 +94,7 @@ const HomePage = () => {
             posible.
           </p>
         </>
-      )}
-
-      {cameraActive && (
-        <>
-          <video ref={videoRef} className="w-full h-auto rounded mb-4" />
-          <canvas
-            ref={canvasRef}
-            className="hidden"
-            width={300}
-            height={300}
-          ></canvas>
-          <Button className="w-full" onClick={captureImage}>
-            Capture Image
-          </Button>
-        </>
-      )}
+      )} */}
 
       {previewUrl && (
         <Image
@@ -214,9 +147,7 @@ const HomePage = () => {
             <div className="col-span-6">
               <Button
                 onClick={() => {
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                  setDescription(null);
+                  dispatch(resetProductState());
                 }}
                 disabled={loading}
                 className="w-full"
@@ -235,10 +166,8 @@ const HomePage = () => {
           className="w-full"
           variant={"default"}
           onClick={() => {
-            setSelectedFile(null);
-            setPreviewUrl(null);
-            setDescription(null);
-            setLoading(false);
+            dispatch(resetProductState());
+            dispatch(setLoading(false));
           }}
         >
           Analyze another product

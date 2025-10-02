@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { EbayProductType } from "@/types/ebayProduct";
@@ -6,6 +6,8 @@ import { useProductAnalysis } from "@/hooks/useProductAnalysis";
 import { convertToAnalysisData } from "@/utils/convertToAnalysisData";
 import { Button } from "@/components/ui/button";
 import EbayProduct from "@/components/products/EbayProduct";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { incrementVisibleCount } from "@/store/productSlice";
 
 interface EbayProductsListProps {
   products: EbayProductType[] | undefined;
@@ -16,12 +18,13 @@ const EbayProductsList: React.FC<EbayProductsListProps> = ({
   products,
   productsLoading,
 }) => {
-  const [visibleCount, setVisibleCount] = useState(5);
+  const dispatch = useAppDispatch();
+  const visibleCount = useAppSelector((s) => s.product.visibleCount);
   const { data: productAnalysis, isLoading: productAnalysisLoading } =
     useProductAnalysis(convertToAnalysisData(products ? products : []));
 
   const handleLoadMore = () => {
-    setVisibleCount((prevCount) => Math.min(prevCount + 5, 100));
+    dispatch(incrementVisibleCount(5));
   };
 
   return (
