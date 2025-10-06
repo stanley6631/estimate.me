@@ -20,14 +20,28 @@ const CameraController: React.FC = () => {
   const startCamera = async () => {
     dispatch(setCameraActive(true));
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      // Try rear camera first, solution for mobile devices
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: "environment" } },
+      });
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
       }
     } catch (err) {
-      console.error("Error accessing camera:", err);
-      dispatch(setCameraActive(false));
+      // Fallback to default camera if rear camera is not available
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+        });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+          await videoRef.current.play();
+        }
+      } catch (err2) {
+        console.error("Error accessing camera:", err2);
+        dispatch(setCameraActive(false));
+      }
     }
   };
 
