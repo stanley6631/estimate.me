@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { EbaySearchResponse } from "@/types/ebayResponse";
+import { getMatchingProductsAction } from "@/actions/actions";
 
 export const useProducts = (searchQuery: string | null) => {
   return useQuery({
@@ -11,15 +12,13 @@ export const useProducts = (searchQuery: string | null) => {
 
       console.log("Fetching products for query:", searchQuery);
 
-      const response = await fetch(
-        `/api/get-matching-products?q=${encodeURIComponent(searchQuery)}`
-      );
-      if (!response.ok) {
-        throw new Error(
-          "There was an error fetching matching the products from the API"
-        );
+      const result = await getMatchingProductsAction(searchQuery);
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to fetch products");
       }
-      return response.json() as Promise<EbaySearchResponse>;
+
+      return result.data as EbaySearchResponse;
     },
     enabled: !!searchQuery,
     refetchOnWindowFocus: false,

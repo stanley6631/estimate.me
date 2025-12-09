@@ -2,8 +2,6 @@ import React from "react";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { EbayProductType } from "@/types/ebayProduct";
-import { useProductAnalysis } from "@/hooks/useProductAnalysis";
-import { convertToAnalysisData } from "@/utils/convertToAnalysisData";
 import { Button } from "@/components/ui/button";
 import EbayProduct from "@/components/products/EbayProduct";
 import { useAppDispatch, useAppSelector } from "@/lib/store";
@@ -20,8 +18,6 @@ const EbayProductsList: React.FC<EbayProductsListProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const visibleCount = useAppSelector((s) => s.product.visibleCount);
-  const { data: productAnalysis, isLoading: productAnalysisLoading } =
-    useProductAnalysis(convertToAnalysisData(products ? products : []));
 
   const handleLoadMore = () => {
     dispatch(incrementVisibleCount(5));
@@ -80,10 +76,6 @@ const EbayProductsList: React.FC<EbayProductsListProps> = ({
           )}
         </>
       )}
-
-      {productAnalysis &&
-        !productAnalysisLoading &&
-        console.log(productAnalysis)}
     </div>
   );
 };
