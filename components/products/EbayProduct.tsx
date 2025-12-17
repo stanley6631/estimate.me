@@ -32,4 +32,4 @@ const EbayProduct: React.FC<EbayProductProps> = ({ product }) => {
   );
 };
 
-export default EbayProduct;
+export default React.memo(EbayProduct);
