@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import SettingsMenu from "./SettingsMenu";
+// import SettingsMenu from "./SettingsMenu";
 import Image from "next/image";
 
 const Header: React.FC = () => {
@@ -17,7 +17,7 @@ const Header: React.FC = () => {
           estimate.me
         </h1>
       </Link>
-      <SettingsMenu />
+      {/* <SettingsMenu /> */}
     </header>
   );
 };

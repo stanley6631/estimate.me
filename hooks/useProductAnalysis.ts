@@ -15,7 +15,5 @@ export const useProductAnalysis = (data: ProductAnalysisDataObject[]) => {
       return result.data;
     },
     enabled: !!data?.length,
-    refetchOnWindowFocus: false,
-    retry: false,
   });
 };

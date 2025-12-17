@@ -21,7 +21,5 @@ export const useProducts = (searchQuery: string | null) => {
       return result.data as EbaySearchResponse;
     },
     enabled: !!searchQuery,
-    refetchOnWindowFocus: false,
-    retry: false,
   });
 };
