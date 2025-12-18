@@ -1,12 +1,19 @@
 import React from "react";
-import { LoginForm } from "@/components/LoginForm";
+import { LoginForm } from "@/components/login/LoginForm";
+import { LoginError } from "@/components/login/LoginError";
 
-const AuthPage: React.FC = () => {
-  return (
-    <>
-      <LoginForm className="max-w-[400px] mx-auto" />
-    </>
-  );
+const AuthPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) => {
+  const { error } = await searchParams;
+
+  if (error) {
+    return <LoginError />;
+  }
+
+  return <LoginForm />;
 };
 
 export default AuthPage;

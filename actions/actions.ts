@@ -58,3 +58,31 @@ export async function analyzeProductsAction(products: any[]) {
     return { success: false, error: "Failed to analyze products" };
   }
 }
+
+/**
+ * Server Action: Sign in with email (OTP)
+ */
+export async function signInWithEmailAction(email: string) {
+  try {
+    const { createClient } = await import("@/lib/supabase/server");
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: `${
+          process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
+        }/login/callback`,
+      },
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error("Error in signInWithEmailAction:", error);
+    return { success: false, error: "Failed to sign in" };
+  }
+}
