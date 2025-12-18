@@ -86,3 +86,24 @@ export async function signInWithEmailAction(email: string) {
     return { success: false, error: "Failed to sign in" };
   }
 }
+
+/**
+ * Server Action: Sign out
+ */
+
+export async function signOutAction() {
+  try {
+    const { createClient } = await import("@/lib/supabase/server");
+    const supabase = await createClient();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error in signOutAction:", error);
+  }
+}
