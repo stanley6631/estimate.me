@@ -3,6 +3,7 @@ import ProductAnalyzer from "@/components/common/ProductAnalyzer";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
+//TODO: create a protected route wrapper component to avvoid duplicated session check code
 const HomePage = async () => {
   const supabase = await createClient();
   const { data } = await supabase.auth.getSession();

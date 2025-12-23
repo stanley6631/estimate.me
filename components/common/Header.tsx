@@ -1,9 +1,14 @@
 import React from "react";
 import Link from "next/link";
-// import SettingsMenu from "./SettingsMenu";
+import SettingsMenu from "./SettingsMenu";
 import Image from "next/image";
+import { Session } from "@supabase/supabase-js";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  session: Session | null;
+}
+
+const Header: React.FC<HeaderProps> = ({ session }) => {
   return (
     <header className="w-full bg-gray-100 flex items-center justify-between border-b px-4">
       <Link href="/">
@@ -17,7 +22,7 @@ const Header: React.FC = () => {
           estimate.me
         </h1>
       </Link>
-      {/* <SettingsMenu /> */}
+      <SettingsMenu session={session} />
     </header>
   );
 };
