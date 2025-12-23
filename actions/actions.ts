@@ -70,9 +70,7 @@ export async function signInWithEmailAction(email: string) {
       email,
       options: {
         shouldCreateUser: false,
-        emailRedirectTo: `${
-          process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-        }/login/callback`,
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/login/callback`,
       },
     });
 

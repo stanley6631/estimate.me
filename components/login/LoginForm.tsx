@@ -31,9 +31,9 @@ export function LoginForm({
     const result = await signInWithEmailAction(email);
 
     if (result.success) {
-      setMessage("Check your email for the magic link!");
+      setMessage("Check your email for login link.");
     } else {
-      setMessage(result.error || "Failed to send magic link");
+      setMessage(result.error || "Failed to send login link");
     }
 
     setIsLoading(false);
@@ -63,7 +63,7 @@ export function LoginForm({
             </a>
             <h1 className="text-xl font-bold">Welcome to estimate.me</h1>
             <FieldDescription>
-              Provide an email address to sign in. We'll send you a magic link.
+              Provide an email address to sign in. We'll send you a login link.
             </FieldDescription>
           </div>
           <Field>
